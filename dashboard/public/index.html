@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neva Network | Master Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <div class="brand-logo-wrapper">
+                        <i data-lucide="shield-check" class="brand-icon"></i>
+                    </div>
+                    <div>
+                        <h2>NEVA NETWORK</h2>
+                        <span class="sub-brand">MASTER DASHBOARD</span>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <p class="nav-label">MERKEZİ AĞ</p>
+                <button class="nav-btn active" data-target="network-hub">
+                    <i data-lucide="layout-grid"></i> Ağ Özeti
+                </button>
+                
+                <p class="nav-label">MODÜLLER (BOTLAR)</p>
+                
+                <!-- Moderation Module Item -->
+                <div class="module-group" id="group-moderation">
+                    <div class="module-header" onclick="app.toggleGroup('mod-sub')">
+                        <div class="module-title">
+                            <i data-lucide="shield" style="color: #3b82f6;"></i>
+                            <span>Neva Moderation</span>
+                        </div>
+                        <span class="bot-badge" id="badge-mod">🟢 Aktif</span>
+                    </div>
+                    <div class="sub-menu" id="mod-sub">
+                        <button class="sub-nav-btn" data-target="mod-logs"><i data-lucide="file-text"></i> Log Kanalları</button>
+                        <button class="sub-nav-btn" data-target="mod-guard"><i data-lucide="lock"></i> Guard & Anti-Raid</button>
+                        <button class="sub-nav-btn" data-target="mod-tempvoice"><i data-lucide="mic"></i> Geçici Ses Odaları</button>
+                        <button class="sub-nav-btn" data-target="mod-automod"><i data-lucide="message-square-off"></i> Oto-Mod & Küfür</button>
+                        <button class="sub-nav-btn" data-target="mod-leveling"><i data-lucide="award"></i> Seviye & XP</button>
+                        <button class="sub-nav-btn" data-target="mod-autorole"><i data-lucide="user-plus"></i> AutoRole</button>
+                    </div>
+                </div>
+
+                <!-- Ticket Module Item -->
+                <div class="module-group" id="group-ticket">
+                    <div class="module-header" onclick="app.toggleGroup('ticket-sub')">
+                        <div class="module-title">
+                            <i data-lucide="ticket" style="color: #5865F2;"></i>
+                            <span>Neva Ticket</span>
+                        </div>
+                        <span class="bot-badge" id="badge-ticket">🟢 Aktif</span>
+                    </div>
+                    <div class="sub-menu" id="ticket-sub">
+                        <button class="sub-nav-btn" data-target="ticket-live"><i data-lucide="inbox"></i> Canlı Biletler</button>
+                        <button class="sub-nav-btn" data-target="ticket-ratings"><i data-lucide="star"></i> Yetkili Puanları</button>
+                        <button class="sub-nav-btn" data-target="ticket-settings"><i data-lucide="settings"></i> Bilet Ayarları</button>
+                    </div>
+                </div>
+
+                <p class="nav-label">SİSTEM</p>
+                <button class="nav-btn" data-target="system-health">
+                    <i data-lucide="activity"></i> Sistem Durumu
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar-placeholder"><i data-lucide="crown"></i></div>
+                    <div class="user-info">
+                        <span class="user-name">Sunucu Sahibi</span>
+                        <span class="user-role">Neva Network Enterprise</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-search">
+                    <i data-lucide="search"></i>
+                    <input type="text" placeholder="Merkezi ağda ara (Komutlar, Ayarlar, Biletler)...">
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" onclick="app.refreshData()" title="Yenile"><i data-lucide="refresh-cw"></i></button>
+                    <div class="guild-selector">
+                        <i data-lucide="server" style="color: #5865F2;"></i>
+                        <span id="currentGuildName">Yükleniyor...</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                
+                <!-- 1. Network Hub Page -->
+                <section id="network-hub" class="page active animate-fade-in">
+                    <div class="page-header">
+                        <div>
+                            <h1>Neva Master Network Özeti</h1>
+                            <p>Sunucunuzdaki Neva bot ekosisteminin anlık durum kontrol paneli.</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card gold-glow">
+                            <div class="stat-icon-wrapper" style="color: #f59e0b"><i data-lucide="crown"></i></div>
+                            <div class="stat-info">
+                                <h3>Aktif Sunucu Üyesi</h3>
+                                <p id="stat-members" class="stat-value">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card blue-glow">
+                            <div class="stat-icon-wrapper" style="color: #3b82f6"><i data-lucide="shield"></i></div>
+                            <div class="stat-info">
+                                <h3>Moderasyon İşlemleri</h3>
+                                <p id="stat-modlogs-count" class="stat-value">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card purple-glow">
+                            <div class="stat-icon-wrapper" style="color: #5865F2"><i data-lucide="ticket"></i></div>
+                            <div class="stat-info">
+                                <h3>Çözülen Biletler</h3>
+                                <p id="stat-tickets-count" class="stat-value">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bot-cards-grid">
+                        <!-- Moderation Card -->
+                        <div class="bot-status-card" id="card-mod-bot">
+                            <div class="bot-card-header">
+                                <div class="bot-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;"><i data-lucide="shield"></i></div>
+                                <div>
+                                    <h3>Neva Moderation</h3>
+                                    <span class="bot-version">v2.4 Enterprise</span>
+                                </div>
+                                <span class="status-indicator online" id="mod-indicator">Yüklendi</span>
+                            </div>
+                            <p class="bot-desc">Gelişmiş Guard, Anti-Raid, Özel Log Kanalları, TempVoice Odaları ve Küfür Koruması.</p>
+                            <div class="bot-card-footer">
+                                <button class="action-btn primary" onclick="app.navigateTo('mod-guard')"><i data-lucide="settings"></i> Ayarları Yönet</button>
+                            </div>
+                        </div>
+
+                        <!-- Ticket Card -->
+                        <div class="bot-status-card" id="card-ticket-bot">
+                            <div class="bot-card-header">
+                                <div class="bot-icon" style="background: rgba(88, 101, 242, 0.1); color: #5865F2;"><i data-lucide="ticket"></i></div>
+                                <div>
+                                    <h3>Neva Ticket</h3>
+                                    <span class="bot-version">v1.8 Enterprise</span>
+                                </div>
+                                <span class="status-indicator online" id="ticket-indicator">Yüklendi</span>
+                            </div>
+                            <p class="bot-desc">Açılır Menülü Biletler, Modal Formlar, Renkli HTML Sohbet Yedekleri ve 5 Yıldız Puanlama.</p>
+                            <div class="bot-card-footer">
+                                <button class="action-btn primary" onclick="app.navigateTo('ticket-settings')"><i data-lucide="settings"></i> Ayarları Yönet</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Moderation Pages -->
+                <section id="mod-logs" class="page">
+                    <div class="page-header">
+                        <h1>Ayrı Log Kanalları</h1>
+                        <p>Her ceza ve eylemi özel kanallara yönlendirin.</p>
+                    </div>
+                    <div class="panel full-width">
+                        <div class="settings-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="form-group"><label>Ban Log Kanalı</label><select id="log-ban" class="sleek-input channel-select"></select></div>
+                            <div class="form-group"><label>Mute Log Kanalı</label><select id="log-mute" class="sleek-input channel-select"></select></div>
+                            <div class="form-group"><label>Kick Log Kanalı</label><select id="log-kick" class="sleek-input channel-select"></select></div>
+                            <div class="form-group"><label>Warn Log Kanalı</label><select id="log-warn" class="sleek-input channel-select"></select></div>
+                            <div class="form-group"><label>Mesaj Düzenleme/Silme Log</label><select id="log-message" class="sleek-input channel-select"></select></div>
+                            <div class="form-group"><label>Ses Katılım/Ayrılma Log</label><select id="log-voice" class="sleek-input channel-select"></select></div>
+                            <div class="form-group" style="grid-column: 1 / -1;"><label>Üye Katılım/Ayrılma Log</label><select id="log-member" class="sleek-input channel-select"></select></div>
+                        </div>
+                        <button class="save-btn" onclick="app.saveModLogs()"><i data-lucide="save"></i> Kaydet</button>
+                    </div>
+                </section>
+
+                <section id="mod-guard" class="page">
+                    <div class="page-header">
+                        <h1>Guard & Anti-Raid Koruması</h1>
+                        <p>Sunucunuzu izinsiz botlara ve genç hesap saldırılarına karşı koruyun.</p>
+                    </div>
+                    <div class="panel full-width">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3><i data-lucide="bot" style="width:16px;"></i> Bot Katılım Koruması (Anti-Bot)</h3>
+                                <p>Sunucuya izinsiz katılan botları anında atar.</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="guard-antibot">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3><i data-lucide="shield-alert" style="width:16px;"></i> Anti-Raid Otomatik Kilit</h3>
+                                <p>Hızlı üye akınında kanalları otomatik kilitler.</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="guard-antiraid">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <button class="save-btn" onclick="app.saveGuard()"><i data-lucide="save"></i> Guard Ayarlarını Kaydet</button>
+                    </div>
+                </section>
+
+                <section id="mod-tempvoice" class="page">
+                    <div class="page-header">
+                        <h1>Geçici Ses Odaları (JTC)</h1>
+                        <p>Üyeler için kontrol panelli dinamik ses odaları.</p>
+                    </div>
+                    <div class="panel full-width">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Geçici Ses Odaları Aktif</h3>
+                                <p>Odaya girince otomatik üye odası açar.</p>
+                            </div>
+                            <label class="toggle-switch"><input type="checkbox" id="jtc-enabled"><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="form-group"><label>Oluşturucu Ses Kanalı</label><select id="jtc-channel" class="sleek-input channel-select"></select></div>
+                        <div class="form-group"><label>Oda İçi Control Panel Banner URL</label><input type="text" id="jtc-banner" class="sleek-input" placeholder="https://..."></div>
+                        <button class="save-btn" onclick="app.saveTempVoice()"><i data-lucide="save"></i> JTC Ayarlarını Kaydet</button>
+                    </div>
+                </section>
+
+                <section id="mod-automod" class="page">
+                    <div class="page-header">
+                        <h1>Oto-Moderasyon & Küfür Filtresi</h1>
+                        <p>Kapsamlı Türkçe ve İngilizce engelleme listesi.</p>
+                    </div>
+                    <div class="panel full-width" id="automod-container">
+                    </div>
+                </section>
+
+                <!-- 3. Ticket Pages -->
+                <section id="ticket-live" class="page">
+                    <div class="page-header">
+                        <h1>Canlı Biletler & Transcriptler</h1>
+                        <p>Aktif destek talepleri ve sohbet yedekleri.</p>
+                    </div>
+                    <div class="panel full-width">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Durum</th>
+                                        <th>Kullanıcı</th>
+                                        <th>Kategori</th>
+                                        <th>Üstlenen Yetkili</th>
+                                        <th>Puan</th>
+                                        <th>Tarih</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ticket-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="ticket-ratings" class="page">
+                    <div class="page-header">
+                        <h1>Yetkili Memnuniyet Puanları</h1>
+                        <p>Kullanıcıların 5 yıldız üzerinden verdiği destek değerlendirmeleri.</p>
+                    </div>
+                    <div class="panel full-width">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sıra</th>
+                                        <th>Yetkili ID</th>
+                                        <th>Toplam Değerlendirme</th>
+                                        <th>Ortalama Yıldız</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ratings-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="ticket-settings" class="page">
+                    <div class="page-header">
+                        <h1>Bilet Yapılandırması</h1>
+                        <p>Bilet kategorileri ve görsel banner seçenekleri.</p>
+                    </div>
+                    <div class="panel full-width">
+                        <div class="form-group"><label>Bilet Kategorisi</label><select id="tset-category" class="sleek-input category-select"></select></div>
+                        <div class="form-group"><label>Destek Ekibi Rolü</label><select id="tset-role" class="sleek-input role-select"></select></div>
+                        <div class="form-group"><label>HTML Transcript Log Kanalı</label><select id="tset-log" class="sleek-input channel-select"></select></div>
+                        <div class="form-group"><label>Panel Banner URL</label><input type="text" id="tset-banner" class="sleek-input" placeholder="https://..."></div>
+                        <button class="save-btn" onclick="app.saveTicketSettings()"><i data-lucide="save"></i> Bilet Ayarlarını Kaydet</button>
+                    </div>
+                </section>
+
+                <!-- 4. System Health Page -->
+                <section id="system-health" class="page">
+                    <div class="page-header">
+                        <h1>Merkezi Ağ Sağlığı</h1>
+                        <p>Botların gecikme (ping) ve veritabanı durumları.</p>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon-wrapper" style="color: #3b82f6"><i data-lucide="shield"></i></div>
+                            <div class="stat-info">
+                                <h3>Neva Moderation Ping</h3>
+                                <p id="ping-mod" class="stat-value">0ms</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon-wrapper" style="color: #5865F2"><i data-lucide="ticket"></i></div>
+                            <div class="stat-info">
+                                <h3>Neva Ticket Ping</h3>
+                                <p id="ping-ticket" class="stat-value">0ms</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="app.js"></script>
+</body>
+</html>
